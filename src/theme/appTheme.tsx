@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
   calculatorContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    // backgroundColor: '#cc1d1d',
     justifyContent: 'flex-end',
   },
   result: {

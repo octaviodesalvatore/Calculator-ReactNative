@@ -1,65 +1,28 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, View} from 'react-native';
 import {ButtonCalc} from '../components/ButtonCalc';
 import {styles} from '../theme/appTheme';
+import {useCalculator} from '../hooks/useCalculator';
 
 export const CalculatorScreen = () => {
-  const [number, setNumber] = useState('0');
-  const [numberBefore, setNumberBefore] = useState('0');
-
-  const clean = () => {
-    setNumber('0');
-  };
-
-  const makeNumber = (textNumber: string) => {
-    //No aceptar doble punto
-
-    if (number.includes('.') && textNumber === '.') return;
-
-    if (number.startsWith('0') || number.startsWith('-0')) {
-      //Punto decimal
-      if (textNumber === '.') {
-        setNumber(number + textNumber);
-
-        //Evaluar si es otro cero y hay un punto
-      } else if (textNumber === '0' && number.includes('.')) {
-        setNumber(number + textNumber);
-
-        //Evaluar si es diferente de 0 y no tiene punto para cambiar el num 0
-      } else if (textNumber !== '0' && !number.includes('.')) {
-        setNumber(textNumber);
-        //Evitar 0000.0
-      } else if (textNumber === '0' && !number.includes('.')) {
-        setNumber(number);
-      } else {
-        setNumber(number + textNumber);
-      }
-    } else {
-      setNumber(number + textNumber);
-    }
-  };
-
-  const positiveNegative = () => {
-    if (number.includes('-')) {
-      setNumber(number.replace('-', ''));
-    } else {
-      setNumber('-' + number);
-    }
-  };
-
-  const btnDelete = () => {
-    if (number.length === 2 && number.includes('-')) {
-      setNumber('0');
-    } else if (number.length > 1) {
-      setNumber(number.slice(0, number.length - 1));
-    } else if (number.length === 1) {
-      setNumber('0');
-    }
-  };
-
+  const {
+    numberBefore,
+    number,
+    clean,
+    positiveNegative,
+    btnDelete,
+    btnDivide,
+    makeNumber,
+    btnMultiply,
+    btnSubtract,
+    btnAdd,
+    calculate,
+  } = useCalculator();
   return (
     <View style={styles.calculatorContainer}>
-      <Text style={styles.smallResult}>{numberBefore}</Text>
+      {numberBefore !== '0' && (
+        <Text style={styles.smallResult}>{numberBefore}</Text>
+      )}
       <Text style={styles.result} numberOfLines={1} adjustsFontSizeToFit={true}>
         {number}
       </Text>
@@ -70,34 +33,34 @@ export const CalculatorScreen = () => {
         <ButtonCalc text="C" bgColor="#9B9B9B" action={clean} />
         <ButtonCalc text="+/-" bgColor="#9B9B9B" action={positiveNegative} />
         <ButtonCalc text="del" bgColor="#9B9B9B" action={btnDelete} />
-        <ButtonCalc text="/" bgColor="#FF9427" />
+        <ButtonCalc text="/" bgColor="#FF9427" action={btnDivide} />
       </View>
 
       <View style={styles.row}>
         <ButtonCalc text="7" action={makeNumber} />
         <ButtonCalc text="8" action={makeNumber} />
         <ButtonCalc text="9" action={makeNumber} />
-        <ButtonCalc text="X" bgColor="#FF9427" />
+        <ButtonCalc text="X" bgColor="#FF9427" action={btnMultiply} />
       </View>
 
       <View style={styles.row}>
         <ButtonCalc text="4" action={makeNumber} />
         <ButtonCalc text="5" action={makeNumber} />
         <ButtonCalc text="6" action={makeNumber} />
-        <ButtonCalc text="-" bgColor="#FF9427" />
+        <ButtonCalc text="-" bgColor="#FF9427" action={btnSubtract} />
       </View>
 
       <View style={styles.row}>
         <ButtonCalc text="1" action={makeNumber} />
         <ButtonCalc text="2" action={makeNumber} />
         <ButtonCalc text="3" action={makeNumber} />
-        <ButtonCalc text="+" bgColor="#FF9427" />
+        <ButtonCalc text="+" bgColor="#FF9427" action={btnAdd} />
       </View>
 
       <View style={styles.row}>
         <ButtonCalc text="0" ancho={true} action={makeNumber} />
         <ButtonCalc text="." action={makeNumber} />
-        <ButtonCalc text="=" bgColor="#FF9427" />
+        <ButtonCalc text="=" bgColor="#FF9427" action={calculate} />
       </View>
     </View>
   );
